@@ -13,7 +13,7 @@ class Renderer
     public:
         Renderer();
         virtual ~Renderer();
-        void render(ALLEGRO_DISPLAY *display, Gamestate *currentstate, EntityPtr myself_, Networker *networker);
+        void render(ALLEGRO_DISPLAY *display, Gamestate &state, EntityPtr myself_, Networker &networker);
         ALLEGRO_DISPLAY* createnewdisplay();
         ALLEGRO_DISPLAY* createnewdisplay(const nlohmann::json &config);
         double cam_x;

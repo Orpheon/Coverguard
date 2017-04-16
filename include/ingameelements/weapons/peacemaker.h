@@ -7,24 +7,23 @@
 class Peacemaker : public Clipweapon
 {
     public:
-        virtual void init(uint64_t id_, Gamestate *state, EntityPtr owner_) override;
+        virtual void init(uint64_t id_, Gamestate &state, EntityPtr owner_) override;
         virtual ~Peacemaker() override = default;
 
-        void render(Renderer *renderer, Gamestate *state) override;
-        std::string getsprite(Gamestate *state, bool mask) override {return "";}
+        void render(Renderer &renderer, Gamestate &state) override;
         std::unique_ptr<Entity> clone() override {return std::unique_ptr<Entity>(new Peacemaker(*this));}
 
-        void fireprimary(Gamestate *state) override;
-        void wantfireprimary(Gamestate *state) override;
-        void firesecondary(Gamestate *state) override;
-        void wantfiresecondary(Gamestate *state) override;
-        void fireultimate(Gamestate *state);
-        void midstep(Gamestate *state, double frametime) override;
-        void reload(Gamestate *state) override;
+        void fireprimary(Gamestate &state) override;
+        void wantfireprimary(Gamestate &state) override;
+        void firesecondary(Gamestate &state) override;
+        void wantfiresecondary(Gamestate &state) override;
+        void fireultimate(Gamestate &state);
+        void midstep(Gamestate &state, double frametime) override;
+        void reload(Gamestate &state) override;
 
         std::string herofolder() override {return "heroes/mccree/";}
         int getclipsize() override {return 6;}
-        std::function<void(Gamestate *state)> getreloadfunction(Gamestate *state) override {return std::bind(&Peacemaker::restoreclip, this, state);}
+        std::function<void(Gamestate &state)> getreloadfunction(Gamestate &state) override {return std::bind(&Peacemaker::restoreclip, this, std::placeholders::_1);}
         double getattachpoint_x() override {return -3;}
         double getattachpoint_y() override {return 8;}
 

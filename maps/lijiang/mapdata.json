@@ -1,0 +1,14 @@
+{
+    "background": "lijiang.png",
+    "wallmask": "lijiang_wm.png",
+    "wallmask foreground": "lijiang_wm.png",
+    "gamemodes": [
+        {
+            "type": "KOTH",
+            "spawn 1": [165, 752, 339, 295],
+            "spawn 2": [3342, 752, 339, 295],
+            "cp": [1812, 942, 222, 198]
+        }
+    ]
+
+}

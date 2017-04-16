@@ -7,9 +7,9 @@
 #include "entity.h"
 #include "ingameelements/player.h"
 #include "ingameelements/projectile.h"
-#include "ingameelements/spawnroom.h"
+#include "mapelements/spawnroom.h"
 
-Gamestate::Gamestate(Engine *engine_) : entitylist(), playerlist(), currentmap(), engine(engine_), entityidcounter(1)
+Gamestate::Gamestate(Engine &engine_) : entitylist(), playerlist(), currentmap(), engine(engine_), entityidcounter(1)
 {
     time = 0;
 }
@@ -23,25 +23,25 @@ void Gamestate::update(double frametime)
 {
     time += frametime;
 
-    for (auto& e : entitylist)
+    for (auto &e : entitylist)
     {
         if (e.second->isrootobject() and not e.second->destroyentity)
         {
-            e.second->beginstep(this, frametime);
+            e.second->beginstep(*this, frametime);
         }
     }
-    for (auto& e : entitylist)
+    for (auto &e : entitylist)
     {
         if (e.second->isrootobject() and not e.second->destroyentity)
         {
-            e.second->midstep(this, frametime);
+            e.second->midstep(*this, frametime);
         }
     }
-    for (auto& e : entitylist)
+    for (auto &e : entitylist)
     {
         if (e.second->isrootobject() and not e.second->destroyentity)
         {
-            e.second->endstep(this, frametime);
+            e.second->endstep(*this, frametime);
         }
     }
     for (auto e = entitylist.begin(); e != entitylist.end();)
@@ -57,36 +57,30 @@ void Gamestate::update(double frametime)
     }
 }
 
-
 EntityPtr Gamestate::addplayer()
 {
-    EntityPtr r = make_entity<Player>(this);
+    EntityPtr r = make_entity<Player>(*this);
     playerlist.push_back(r);
     return r;
 }
 
 void Gamestate::removeplayer(int playerid)
 {
-    Player *player = findplayer(playerid);
-    for (auto& e : entitylist)
+    for (auto &e : entitylist)
     {
-        if (e.second->isrootobject())
+        auto &entity = *(e.second);
+        if (entity.isowner(EntityPtr(playerid)))
         {
-            if (e.second->entitytype == ENTITYTYPE::PROJECTILE)
-            {
-                Projectile *p = reinterpret_cast<Projectile*>(e.second.get());
-                if (p->owner.id == player->id)
-                {
-                    p->destroy(this);
-                }
-            }
+            entity.destroy(*this);
         }
     }
-    player->destroy(this);
+
+    Player &player = findplayer(playerid);
+    player.destroy(*this);
     playerlist.erase(playerlist.begin()+playerid);
 }
 
-Player* Gamestate::findplayer(int playerid)
+Player& Gamestate::findplayer(int playerid)
 {
     return get<Player>(playerlist.at(playerid));
 }
@@ -100,7 +94,7 @@ int Gamestate::findplayerid(EntityPtr player)
 std::unique_ptr<Gamestate> Gamestate::clone()
 {
     std::unique_ptr<Gamestate> g = std::unique_ptr<Gamestate>(new Gamestate(engine));
-    for (auto& e : entitylist)
+    for (auto &e : entitylist)
     {
         g->entitylist[e.second->id] = e.second->clone();
     }
@@ -111,96 +105,133 @@ std::unique_ptr<Gamestate> Gamestate::clone()
     return g;
 }
 
-void Gamestate::interpolate(Gamestate *prevstate, Gamestate *nextstate, double alpha)
+void Gamestate::interpolate(Gamestate &prevstate, Gamestate &nextstate, double alpha)
 {
     // Use threshold of alpha=0.5 to decide binary choices like entity existence
-    Gamestate *preferredstate;
-    if (alpha < 0.5)
-    {
-        preferredstate = prevstate;
-    }
-    else
-    {
-        preferredstate = nextstate;
-    }
-    currentmap = preferredstate->currentmap;
-    entityidcounter = preferredstate->entityidcounter;
-    playerlist = preferredstate->playerlist;
-    time = prevstate->time + alpha*(nextstate->time - prevstate->time);
+    Gamestate &preferredstate = alpha < 0.5 ? prevstate : nextstate;
+    currentmap = preferredstate.currentmap;
+    entityidcounter = preferredstate.entityidcounter;
+    playerlist = preferredstate.playerlist;
+    time = prevstate.time + alpha*(nextstate.time - prevstate.time);
 
     entitylist.clear();
-    for (auto& e : preferredstate->entitylist)
+    for (auto &e : preferredstate.entitylist)
     {
-        entitylist[e.second->id] = e.second->clone();
-        if (prevstate->entitylist.count(e.second->id) != 0 && nextstate->entitylist.count(e.second->id) != 0)
+        Entity &entity = *(e.second);
+        entitylist[entity.id] = entity.clone();
+        if (prevstate.entitylist.count(entity.id) != 0 && nextstate.entitylist.count(entity.id) != 0)
         {
             // If the instance exists in both states, we need to actually interpolate values
-            entitylist[e.second->id]->interpolate(prevstate->entitylist.at(e.second->id).get(), nextstate->entitylist.at(e.second->id).get(), alpha);
+            entitylist[entity.id]->interpolate(*prevstate.entitylist.at(entity.id), *nextstate.entitylist.at(entity.id), alpha);
         }
     }
 }
 
 
-void Gamestate::serializesnapshot(WriteBuffer *buffer)
+void Gamestate::serializesnapshot(WriteBuffer &buffer)
 {
-    for (auto p : playerlist)
+    for (auto &p : playerlist)
     {
-        get<Player>(p)->serialize(this, buffer, false);
+        get<Player>(p).serialize(*this, buffer, false);
     }
 }
 
-void Gamestate::deserializesnapshot(ReadBuffer *buffer)
+void Gamestate::deserializesnapshot(ReadBuffer &buffer)
 {
-    for (auto p : playerlist)
+    for (auto &p : playerlist)
     {
-        get<Player>(p)->deserialize(this, buffer, false);
+        get<Player>(p).deserialize(*this, buffer, false);
     }
 }
 
-void Gamestate::serializefull(WriteBuffer *buffer)
+void Gamestate::serializefull(WriteBuffer &buffer)
 {
-    buffer->write<uint32_t>(playerlist.size());
-    for (auto p : playerlist)
+    buffer.write<uint32_t>(playerlist.size());
+    for (auto &p : playerlist)
     {
-        get<Player>(p)->serialize(this, buffer, true);
+        get<Player>(p).serialize(*this, buffer, true);
     }
 }
 
-void Gamestate::deserializefull(ReadBuffer *buffer)
+void Gamestate::deserializefull(ReadBuffer &buffer)
 {
-    int nplayers = buffer->read<uint32_t>();
+    int nplayers = buffer.read<uint32_t>();
     for (int i=0; i<nplayers; ++i)
     {
         addplayer();
     }
     for (auto p : playerlist)
     {
-        get<Player>(p)->deserialize(this, buffer, true);
+        get<Player>(p).deserialize(*this, buffer, true);
     }
 }
 
+EntityPtr Gamestate::collidelinetarget(Gamestate &state, double x1, double y1, MovingEntity &target, Team team,
+                                       PenetrationLevel penlevel, double *collisionptx, double *collisionpty)
+{
+    int nsteps = std::ceil(std::max(std::abs(x1-target.x), std::abs(y1-target.y)));
+    double dx = static_cast<double>(target.x-x1)/nsteps, dy = static_cast<double>(target.y-y1)*1.0/nsteps;
+    *collisionptx = x1;
+    *collisionpty = y1;
+    for (int i=0; i<nsteps; ++i)
+    {
+        if ((not (penlevel & PENETRATE_WALLMASK)) and (currentmap->testpixel(*collisionptx, *collisionpty) or
+            currentmap->spawnroom(state, team).isinside(*collisionptx, *collisionpty)))
+        {
+            // We hit wallmask or went out of bounds or hit enemy spawnroom
+            return EntityPtr(0);
+        }
+        for (auto &e : entitylist)
+        {
+            auto &entity = *(e.second);
+            if ((entity.id == target.id or entity.blocks(penlevel)) and entity.damageableby(team))
+            {
+                double enemycenterx=0, enemycentery=0;
+                double dist = entity.maxdamageabledist(state, &enemycenterx, &enemycentery);
+                if (std::hypot(enemycenterx-*collisionptx, enemycentery-*collisionpty) <= dist)
+                {
+                    if (entity.collides(state, *collisionptx, *collisionpty))
+                    {
+                        return EntityPtr(entity.id);
+                    }
+                }
+            }
+        }
+        *collisionptx += dx; *collisionpty += dy;
+    }
+    Global::logging().panic(__FILE__, __LINE__, "Entity %i could not be reached at pt %f|%f", target.id, collisionptx, collisionpty);
+    return EntityPtr(0);
+}
 
-EntityPtr Gamestate::collidelinedamageable(double x1, double y1, double x2, double y2, Team team, double *collisionptx, double *collisionpty)
+
+EntityPtr Gamestate::collidelinedamageable(Gamestate &state, double x1, double y1, double x2, double y2,
+                                           Team team, double *collisionptx, double *collisionpty)
 {
     int nsteps = std::ceil(std::max(std::abs(x1-x2), std::abs(y1-y2)));
     double dx = static_cast<double>(x2-x1)/nsteps, dy = static_cast<double>(y2-y1)*1.0/nsteps;
     *collisionptx = x1;
     *collisionpty = y1;
+    Team enemyteam = team == TEAM1 ? TEAM2 : TEAM1;
     for (int i=0; i<nsteps; ++i)
     {
-        if (currentmap->testpixel(*collisionptx, *collisionpty) or get<Spawnroom>(spawnrooms[not team])->isinside(*collisionptx, *collisionpty))
+        if (currentmap->testpixel(*collisionptx, *collisionpty) or currentmap->spawnroom(state, enemyteam).isinside(*collisionptx, *collisionpty))
         {
             // We hit wallmask or went out of bounds or hit enemy spawnroom
             return EntityPtr(0);
         }
-        for (auto p : playerlist)
+        for (auto &e : entitylist)
         {
-            Character *c = get<Player>(p)->getcharacter(this);
-            if (c != 0 and c->team != team)
+            auto &entity = *(e.second);
+            if (entity.damageableby(team))
             {
-                if (c->collides(this, *collisionptx, *collisionpty))
+                double enemycenterx=0, enemycentery=0;
+                double dist = entity.maxdamageabledist(state, &enemycenterx, &enemycentery);
+                if (std::hypot(enemycenterx-*collisionptx, enemycentery-*collisionpty) <= dist)
                 {
-                    return get<Player>(p)->character;
+                    if (entity.collides(state, *collisionptx, *collisionpty))
+                    {
+                        return EntityPtr(entity.id);
+                    }
                 }
             }
         }

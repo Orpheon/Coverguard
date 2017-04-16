@@ -5,7 +5,8 @@
 #include "gamestate.h"
 #include "global_constants.h"
 
-Engine::Engine(bool isserver_) : currentstate(new Gamestate(this)), oldstate(new Gamestate(this)), maskloader(true), isserver(isserver_), sendbuffer(0)
+Engine::Engine(bool isserver_) : currentstate(new Gamestate(*this)), oldstate(new Gamestate(*this)), maskloader(true),
+                                 isserver(isserver_)
 {
     ;// constructor
 }
@@ -17,7 +18,7 @@ Engine::~Engine()
 
 void Engine::loadmap(std::string mapname)
 {
-    currentstate->currentmap = std::make_shared<Map>(currentstate.get(), mapname);
+    currentstate->currentmap = std::make_shared<Map>(*currentstate, mapname);
 }
 
 void Engine::update(double frametime)

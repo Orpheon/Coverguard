@@ -1,165 +1,207 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <CodeBlocks_project_file>
-	<FileVersion major="1" minor="6" />
+	<FileVersion major="1" minor="6"/>
 	<Project>
-		<Option title="Vanguard" />
-		<Option pch_mode="2" />
-		<Option compiler="gcc" />
+		<Option title="Vanguard"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
 		<Build>
-			<Target title="default">
-				<Option output="Vanguard" prefix_auto="1" extension_auto="1" />
-				<Option type="1" />
-				<Option compiler="gcc" />
-				<Option use_console_runner="0" />
-				<Compiler>
-					<Add directory="include" />
-					<Add directory="include/networking" />
-					<Add directory="include/ingameelements" />
-				</Compiler>
+			<Target title="all">
+				<Option working_dir="/home/orpheon/Programming/C++/Vanguard"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/orpheon/Programming/C++/Vanguard/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/orpheon/Programming/C++/Vanguard/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/orpheon/Programming/C++/Vanguard/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/orpheon/Programming/C++/Vanguard/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
 			</Target>
-			<Target title="cross_compilation">
-				<Option output="Vanguard" prefix_auto="1" extension_auto="1" />
-				<Option type="1" />
-				<Option compiler="gcc" />
-				<Option use_console_runner="0" />
-				<Option projectLinkerOptionsRelation="1" />
-				<Compiler>
-					<Add directory="include" />
-					<Add directory="include/networking" />
-					<Add directory="include/ingameelements" />
-				</Compiler>
+			<Target title="edit_cache">
+				<Option working_dir="/home/orpheon/Programming/C++/Vanguard"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/orpheon/Programming/C++/Vanguard/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/orpheon/Programming/C++/Vanguard/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/orpheon/Programming/C++/Vanguard/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/orpheon/Programming/C++/Vanguard/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
 			</Target>
-			<Target title="release">
-				<Option output="Vanguard" prefix_auto="1" extension_auto="1" />
-				<Option type="1" />
-				<Option compiler="gcc" />
-				<Option use_console_runner="0" />
-				<Option projectLinkerOptionsRelation="1" />
+			<Target title="rebuild_cache">
+				<Option working_dir="/home/orpheon/Programming/C++/Vanguard"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/orpheon/Programming/C++/Vanguard/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/orpheon/Programming/C++/Vanguard/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/orpheon/Programming/C++/Vanguard/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/orpheon/Programming/C++/Vanguard/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="Vanguard">
+				<Option output="/home/orpheon/Programming/C++/Vanguard/Vanguard" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/orpheon/Programming/C++/Vanguard"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="include" />
-					<Add directory="include/networking" />
-					<Add directory="include/ingameelements" />
+					<Add directory="/home/orpheon/Programming/C++/Vanguard/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/usr/include/c++/5"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/5"/>
+					<Add directory="/usr/include/c++/5/backward"/>
 				</Compiler>
-				<Linker>
-					<Add option="-static-libstdc++" />
-					<Add option="-static-libgcc" />
-					<Add option="-static" />
-					<Add library="allegro-static" />
-					<Add library="allegro_image-static" />
-					<Add library="allegro_primitives-static" />
-					<Add library="allegro_font-static" />
-					<Add library="allegro_ttf-static" />
-					<Add library="enet" />
-					<Add library="jpeg" />
-					<Add library="vorbis" />
-					<Add library="ogg" />
-					<Add library="glu32" />
-					<Add library="opengl32" />
-					<Add library="freetype" />
-					<Add library="png16" />
-					<Add library="z" />
-					<Add library="kernel32" />
-					<Add library="user32" />
-					<Add library="gdi32" />
-					<Add library="comdlg32" />
-					<Add library="ole32" />
-					<Add library="dinput" />
-					<Add library="ddraw" />
-					<Add library="dxguid" />
-					<Add library="winmm" />
-					<Add library="dsound" />
-					<Add library="wsock32" />
-					<Add library="psapi" />
-					<Add library="shlwapi" />
-					<Add library="ws2_32" />
-				</Linker>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/orpheon/Programming/C++/Vanguard/Makefile&quot;  VERBOSE=1 Vanguard"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/orpheon/Programming/C++/Vanguard/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/orpheon/Programming/C++/Vanguard/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/orpheon/Programming/C++/Vanguard/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="Vanguard/fast">
+				<Option output="/home/orpheon/Programming/C++/Vanguard/Vanguard" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/orpheon/Programming/C++/Vanguard"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/orpheon/Programming/C++/Vanguard/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/usr/include/c++/5"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/5"/>
+					<Add directory="/usr/include/c++/5/backward"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/orpheon/Programming/C++/Vanguard/Makefile&quot;  VERBOSE=1 Vanguard/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/orpheon/Programming/C++/Vanguard/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/orpheon/Programming/C++/Vanguard/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/orpheon/Programming/C++/Vanguard/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
 			</Target>
 		</Build>
-		<Compiler>
-			<Add option="-Wshadow" />
-			<Add option="-Wall" />
-			<Add option="-std=c++11" />
-			<Add directory="include" />
-		</Compiler>
-		<Linker>
-			<Add library="allegro" />
-			<Add library="allegro_image" />
-			<Add library="allegro_primitives" />
-			<Add library="allegro_font" />
-			<Add library="allegro_ttf" />
-			<Add library="enet" />
-		</Linker>
-		<Unit filename="include/animation.h" />
-		<Unit filename="include/configloader.h" />
-		<Unit filename="include/datastructures.h" />
-		<Unit filename="include/engine.h" />
-		<Unit filename="include/entity.h" />
-		<Unit filename="include/gamestate.h" />
-		<Unit filename="include/global_constants.h" />
-		<Unit filename="include/ingameelements/character.h" />
-		<Unit filename="include/ingameelements/clipweapon.h" />
-		<Unit filename="include/ingameelements/corpse.h" />
-		<Unit filename="include/ingameelements/explosion.h" />
-		<Unit filename="include/ingameelements/heroes/mccree.h" />
-		<Unit filename="include/ingameelements/heroes/reinhardt.h" />
-		<Unit filename="include/ingameelements/map.h" />
-		<Unit filename="include/ingameelements/movingentity.h" />
-		<Unit filename="include/ingameelements/player.h" />
-		<Unit filename="include/ingameelements/projectile.h" />
-		<Unit filename="include/ingameelements/projectiles/flashbang.h" />
-		<Unit filename="include/ingameelements/projectiles/peacemakerbullet.h" />
-		<Unit filename="include/ingameelements/spawnroom.h" />
-		<Unit filename="include/ingameelements/trail.h" />
-		<Unit filename="include/ingameelements/weapon.h" />
-		<Unit filename="include/ingameelements/weapons/hammer.h" />
-		<Unit filename="include/ingameelements/weapons/peacemaker.h" />
-		<Unit filename="include/inputcatcher.h" />
-		<Unit filename="include/json.hpp" />
-		<Unit filename="include/mainmenu.h" />
-		<Unit filename="include/networking/buffer.h" />
-		<Unit filename="include/networking/clientnetworker.h" />
-		<Unit filename="include/networking/networker.h" />
-		<Unit filename="include/networking/servernetworker.h" />
-		<Unit filename="include/renderer.h" />
-		<Unit filename="include/spriteloader.h" />
-		<Unit filename="include/timer.h" />
-		<Unit filename="main.cpp" />
-		<Unit filename="src/animation.cpp" />
-		<Unit filename="src/configloader.cpp" />
-		<Unit filename="src/engine.cpp" />
-		<Unit filename="src/entity.cpp" />
-		<Unit filename="src/gamestate.cpp" />
-		<Unit filename="src/ingameelements/character.cpp" />
-		<Unit filename="src/ingameelements/clipweapon.cpp" />
-		<Unit filename="src/ingameelements/corpse.cpp" />
-		<Unit filename="src/ingameelements/explosion.cpp" />
-		<Unit filename="src/ingameelements/heroes/mccree.cpp" />
-		<Unit filename="src/ingameelements/heroes/reinhardt.cpp" />
-		<Unit filename="src/ingameelements/map.cpp" />
-		<Unit filename="src/ingameelements/movingentity.cpp" />
-		<Unit filename="src/ingameelements/player.cpp" />
-		<Unit filename="src/ingameelements/projectile.cpp" />
-		<Unit filename="src/ingameelements/projectiles/flashbang.cpp" />
-		<Unit filename="src/ingameelements/projectiles/peacemakerbullet.cpp" />
-		<Unit filename="src/ingameelements/spawnroom.cpp" />
-		<Unit filename="src/ingameelements/trail.cpp" />
-		<Unit filename="src/ingameelements/weapon.cpp" />
-		<Unit filename="src/ingameelements/weapons/hammer.cpp" />
-		<Unit filename="src/ingameelements/weapons/peacemaker.cpp" />
-		<Unit filename="src/inputcatcher.cpp" />
-		<Unit filename="src/mainmenu.cpp" />
-		<Unit filename="src/networking/buffer.cpp" />
-		<Unit filename="src/networking/clientnetworker.cpp" />
-		<Unit filename="src/networking/networker.cpp" />
-		<Unit filename="src/networking/servernetworker.cpp" />
-		<Unit filename="src/renderer.cpp" />
-		<Unit filename="src/spriteloader.cpp" />
-		<Unit filename="src/timer.cpp" />
-		<Extensions>
-			<code_completion />
-			<envvars />
-			<debugger />
-			<lib_finder disable_auto="1" />
-		</Extensions>
+		<Unit filename="/home/orpheon/Programming/C++/Vanguard/main.cpp">
+			<Option target="Vanguard"/>
+		</Unit>
+		<Unit filename="/home/orpheon/Programming/C++/Vanguard/src/animation.cpp">
+			<Option target="Vanguard"/>
+		</Unit>
+		<Unit filename="/home/orpheon/Programming/C++/Vanguard/src/colorpalette.cpp">
+			<Option target="Vanguard"/>
+		</Unit>
+		<Unit filename="/home/orpheon/Programming/C++/Vanguard/src/configloader.cpp">
+			<Option target="Vanguard"/>
+		</Unit>
+		<Unit filename="/home/orpheon/Programming/C++/Vanguard/src/engine.cpp">
+			<Option target="Vanguard"/>
+		</Unit>
+		<Unit filename="/home/orpheon/Programming/C++/Vanguard/src/entity.cpp">
+			<Option target="Vanguard"/>
+		</Unit>
+		<Unit filename="/home/orpheon/Programming/C++/Vanguard/src/gamestate.cpp">
+			<Option target="Vanguard"/>
+		</Unit>
+		<Unit filename="/home/orpheon/Programming/C++/Vanguard/src/global.cpp">
+			<Option target="Vanguard"/>
+		</Unit>
+		<Unit filename="/home/orpheon/Programming/C++/Vanguard/src/ingameelements/character.cpp">
+			<Option target="Vanguard"/>
+		</Unit>
+		<Unit filename="/home/orpheon/Programming/C++/Vanguard/src/ingameelements/clipweapon.cpp">
+			<Option target="Vanguard"/>
+		</Unit>
+		<Unit filename="/home/orpheon/Programming/C++/Vanguard/src/ingameelements/corpse.cpp">
+			<Option target="Vanguard"/>
+		</Unit>
+		<Unit filename="/home/orpheon/Programming/C++/Vanguard/src/ingameelements/explosion.cpp">
+			<Option target="Vanguard"/>
+		</Unit>
+		<Unit filename="/home/orpheon/Programming/C++/Vanguard/src/ingameelements/gamemodes/gamemodemanager.cpp">
+			<Option target="Vanguard"/>
+		</Unit>
+		<Unit filename="/home/orpheon/Programming/C++/Vanguard/src/ingameelements/gamemodes/kothmanager.cpp">
+			<Option target="Vanguard"/>
+		</Unit>
+		<Unit filename="/home/orpheon/Programming/C++/Vanguard/src/ingameelements/heroes/mccree.cpp">
+			<Option target="Vanguard"/>
+		</Unit>
+		<Unit filename="/home/orpheon/Programming/C++/Vanguard/src/ingameelements/heroes/reinhardt.cpp">
+			<Option target="Vanguard"/>
+		</Unit>
+		<Unit filename="/home/orpheon/Programming/C++/Vanguard/src/ingameelements/map.cpp">
+			<Option target="Vanguard"/>
+		</Unit>
+		<Unit filename="/home/orpheon/Programming/C++/Vanguard/src/ingameelements/movingentity.cpp">
+			<Option target="Vanguard"/>
+		</Unit>
+		<Unit filename="/home/orpheon/Programming/C++/Vanguard/src/ingameelements/player.cpp">
+			<Option target="Vanguard"/>
+		</Unit>
+		<Unit filename="/home/orpheon/Programming/C++/Vanguard/src/ingameelements/projectile.cpp">
+			<Option target="Vanguard"/>
+		</Unit>
+		<Unit filename="/home/orpheon/Programming/C++/Vanguard/src/ingameelements/projectiles/flashbang.cpp">
+			<Option target="Vanguard"/>
+		</Unit>
+		<Unit filename="/home/orpheon/Programming/C++/Vanguard/src/ingameelements/shield.cpp">
+			<Option target="Vanguard"/>
+		</Unit>
+		<Unit filename="/home/orpheon/Programming/C++/Vanguard/src/ingameelements/trail.cpp">
+			<Option target="Vanguard"/>
+		</Unit>
+		<Unit filename="/home/orpheon/Programming/C++/Vanguard/src/ingameelements/weapon.cpp">
+			<Option target="Vanguard"/>
+		</Unit>
+		<Unit filename="/home/orpheon/Programming/C++/Vanguard/src/ingameelements/weapons/hammer.cpp">
+			<Option target="Vanguard"/>
+		</Unit>
+		<Unit filename="/home/orpheon/Programming/C++/Vanguard/src/ingameelements/weapons/peacemaker.cpp">
+			<Option target="Vanguard"/>
+		</Unit>
+		<Unit filename="/home/orpheon/Programming/C++/Vanguard/src/ingameelements/weapons/reinhardtshield.cpp">
+			<Option target="Vanguard"/>
+		</Unit>
+		<Unit filename="/home/orpheon/Programming/C++/Vanguard/src/inputcatcher.cpp">
+			<Option target="Vanguard"/>
+		</Unit>
+		<Unit filename="/home/orpheon/Programming/C++/Vanguard/src/mainmenu.cpp">
+			<Option target="Vanguard"/>
+		</Unit>
+		<Unit filename="/home/orpheon/Programming/C++/Vanguard/src/mapelements/controlpoint.cpp">
+			<Option target="Vanguard"/>
+		</Unit>
+		<Unit filename="/home/orpheon/Programming/C++/Vanguard/src/mapelements/spawnroom.cpp">
+			<Option target="Vanguard"/>
+		</Unit>
+		<Unit filename="/home/orpheon/Programming/C++/Vanguard/src/networking/buffer.cpp">
+			<Option target="Vanguard"/>
+		</Unit>
+		<Unit filename="/home/orpheon/Programming/C++/Vanguard/src/networking/clientnetworker.cpp">
+			<Option target="Vanguard"/>
+		</Unit>
+		<Unit filename="/home/orpheon/Programming/C++/Vanguard/src/networking/networker.cpp">
+			<Option target="Vanguard"/>
+		</Unit>
+		<Unit filename="/home/orpheon/Programming/C++/Vanguard/src/networking/servernetworker.cpp">
+			<Option target="Vanguard"/>
+		</Unit>
+		<Unit filename="/home/orpheon/Programming/C++/Vanguard/src/renderer.cpp">
+			<Option target="Vanguard"/>
+		</Unit>
+		<Unit filename="/home/orpheon/Programming/C++/Vanguard/src/spriteloader.cpp">
+			<Option target="Vanguard"/>
+		</Unit>
+		<Unit filename="/home/orpheon/Programming/C++/Vanguard/src/timer.cpp">
+			<Option target="Vanguard"/>
+		</Unit>
+		<Unit filename="/home/orpheon/Programming/C++/Vanguard/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
 	</Project>
 </CodeBlocks_project_file>

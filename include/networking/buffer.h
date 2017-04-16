@@ -1,5 +1,7 @@
 #pragma once
 
+#include "global.h"
+
 #include <cstdio>
 #include <cstdint>
 #include <cstdlib>
@@ -30,8 +32,7 @@ class ReadBuffer : public Buffer
             if (datalen-pos < sizeof(T))
             {
                 // Pulling too much data
-                fprintf(stderr, "\nERROR: Attempted to pull too much data from a readbuffer!");
-                throw -1;
+                Global::logging().panic(__FILE__, __LINE__, "Attempted to pull %i bytes from a readbuffer, but only %i are left", sizeof(T), datalen-pos);
             }
             T r = (*reinterpret_cast<T*>(reinterpret_cast<char*>(data)+pos));
             pos += sizeof(T);

@@ -695,24 +695,24 @@
     ],
     "heroes/reinhardt/shield/ number of frames": 6,
     "heroes/reinhardt/shield/0%_sprite.png": [
-        -28.0,
-        36.0
+        5.0,
+        40.0
     ],
     "heroes/reinhardt/shield/1_sprite.png": [
         17.0,
         16.0
     ],
     "heroes/reinhardt/shield/40%_sprite.png": [
-        -28.0,
-        36.0
+        5.0,
+        40.0
     ],
     "heroes/reinhardt/shield/80%_sprite.png": [
-        -28.0,
-        36.0
+        5.0,
+        40.0
     ],
     "heroes/reinhardt/shield/back_sprite.png": [
-        43.0,
-        46.0
+        5.0,
+        6.0
     ],
     "heroes/reinhardt/shield/front_sprite.png": [
         18.0,

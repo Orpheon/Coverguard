@@ -12,7 +12,7 @@ class InputCatcher
     public:
         InputCatcher(ALLEGRO_DISPLAY *display);
         ~InputCatcher();
-        void run(ALLEGRO_DISPLAY *display, Gamestate *state, Networker *networker, Renderer *renderer, EntityPtr myself);
+        void run(ALLEGRO_DISPLAY *display, Gamestate &state, Networker &networker, Renderer &renderer, EntityPtr myself);
     private:
         ALLEGRO_EVENT_QUEUE *event_queue;
         nlohmann::json config;

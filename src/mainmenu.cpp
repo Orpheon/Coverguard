@@ -1,4 +1,5 @@
 #include "mainmenu.h"
+#include "global.h"
 
 #define LEFT_MOUSE_BUTTON 1
 #define RIGHT_MOUSE_BUTTON 2
@@ -9,8 +10,7 @@ MainMenu::MainMenu(ALLEGRO_DISPLAY *display) : spriteloader(false)
     event_queue = al_create_event_queue();
     if (!event_queue)
     {
-        fprintf(stderr, "Fatal Error: Could not create event queue for the menu!");
-        throw -1;
+        Global::logging().panic(__FILE__, __LINE__, "Could not create event queue");
     }
 
     // Connect the window, keyboard and mouse events to this event queue

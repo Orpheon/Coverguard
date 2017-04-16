@@ -17,51 +17,49 @@
 #include "mainmenu.h"
 #include "networking/servernetworker.h"
 #include "networking/clientnetworker.h"
+#include "global.h"
 
 long int getmillisec();
 
-int main(int argc, char **argv)
+int main_impl(int argc, char **argv)
 {
+    std::unique_ptr<PrintLogger> default_logger(new PrintLogger());
+    Global::provide_logging(default_logger.get());
+
     // Initialize Allegro
     if (!al_init())
     {
-        fprintf(stderr, "Fatal Error: Allegro initialization failed!\n");
-        return -1;
+        Global::logging().panic(__FILE__, __LINE__, "Allegro initialization failed");
     }
 
     // Initialize the Allegro Image addon, used to load sprites and maps
     if (!al_init_image_addon())
     {
-        fprintf(stderr, "Fatal Error: Allegro Image Addon initialization failed!\n");
-        return -1;
+        Global::logging().panic(__FILE__, __LINE__, "Allegro image addon initialization failed");
     }
 
     // Initialize primitives for drawing
     if (!al_init_primitives_addon())
     {
-        fprintf(stderr, "Fatal Error: Could not initialize primitives module!");
-        throw -1;
+        Global::logging().panic(__FILE__, __LINE__, "Allegro primitives addon initialization failed");
     }
 
     // Initialize keyboard modules
     if (!al_install_keyboard())
     {
-        fprintf(stderr, "Fatal Error: Could not initialize keyboard module!");
-        throw -1;
+        Global::logging().panic(__FILE__, __LINE__, "Allegro keyboard initialization failed");
     }
 
     // Initialize mouse
     if (!al_install_mouse())
     {
-        fprintf(stderr, "Fatal Error: Could not initialize mouse module!");
-        throw -1;
+        Global::logging().panic(__FILE__, __LINE__, "Allegro mouse initialization failed");
     }
 
     // Initialize networking system
     if (enet_initialize())
     {
-        fprintf(stderr, "Fatal Error: Could not initialize enet!");
-        throw -1;
+        Global::logging().panic(__FILE__, __LINE__, "Enet initialization failed");
     }
 
     //load font
@@ -71,8 +69,7 @@ int main(int argc, char **argv)
     ALLEGRO_FONT *font = al_load_font("Vanguard Main Font.ttf", 12, ALLEGRO_TTF_MONOCHROME);
     if (!font)
     {
-      fprintf(stderr, "Could not load 'gg2bold.ttf'.\n");
-      throw -1;
+        Global::logging().panic(__FILE__, __LINE__, "Could not load Vanguard Main Font.ttf");
     }
 
 //    MainMenu *mainmenu = new MainMenu(display);
@@ -104,20 +101,19 @@ int main(int argc, char **argv)
 
     Engine engine(isserver);
     InputCatcher inputcatcher(display);
-    Gamestate renderingstate(&engine);
+    Gamestate renderingstate(engine);
 
     std::unique_ptr<Networker> networker;
     if (isserver)
     {
-        networker = std::unique_ptr<Networker>(new ServerNetworker());
+        networker = std::unique_ptr<Networker>(new ServerNetworker(engine.sendbuffer));
     }
     else
     {
-        networker = std::unique_ptr<Networker>(new ClientNetworker());
+        networker = std::unique_ptr<Networker>(new ClientNetworker(engine.sendbuffer));
     }
 
     engine.loadmap("lijiang");
-    engine.sendbuffer = &(networker->sendbuffer);
     // FIXME: Hack to make sure the oldstate is properly initialized
     engine.update(0);
 
@@ -125,14 +121,14 @@ int main(int argc, char **argv)
     if (isserver)
     {
         myself = engine.currentstate->addplayer();
-        engine.currentstate->get<Player>(myself)->spawntimer.active = true;
+        engine.currentstate->get<Player>(myself).spawntimer.active = true;
     }
     else
     {
-        ClientNetworker *n = reinterpret_cast<ClientNetworker*>(networker.get());
-        while (not n->isconnected())
+        ClientNetworker &n = reinterpret_cast<ClientNetworker&>(*networker);
+        while (not n.isconnected())
         {
-            n->receive(engine.currentstate.get());
+            n.receive(*(engine.currentstate));
         }
         myself = engine.currentstate->playerlist.at(engine.currentstate->playerlist.size()-1);
     }
@@ -141,44 +137,39 @@ int main(int argc, char **argv)
     double networkertime = al_get_time();
     while (true)
     {
-        try
+        while (al_get_time() - enginetime >= ENGINE_TIMESTEP)
         {
-            while (al_get_time() - enginetime >= ENGINE_TIMESTEP)
-            {
-                networker->receive(engine.currentstate.get());
-                inputcatcher.run(display, engine.currentstate.get(), networker.get(), &renderer, myself);
-                engine.update(ENGINE_TIMESTEP);
-                networker->sendeventdata(engine.currentstate.get());
+            networker->receive(*(engine.currentstate));
+            inputcatcher.run(display, *(engine.currentstate), *networker, renderer, myself);
+            engine.update(ENGINE_TIMESTEP);
+            networker->sendeventdata(*(engine.currentstate));
 
-                enginetime += ENGINE_TIMESTEP;
-            }
-            if (isserver)
-            {
-                if (al_get_time() - networkertime >= NETWORKING_TIMESTEP)
-                {
-                    ServerNetworker *n = reinterpret_cast<ServerNetworker*>(networker.get());
-                    n->sendframedata(engine.currentstate.get());
-
-                    networkertime = al_get_time();
-                }
-            }
-            renderingstate.interpolate(engine.oldstate.get(), engine.currentstate.get(), (al_get_time()-enginetime)/ENGINE_TIMESTEP);
-            renderer.render(display, &renderingstate, myself, networker.get());
+            enginetime += ENGINE_TIMESTEP;
         }
-        catch (int e)
+        if (isserver)
         {
-            if (e != 0)
+            if (al_get_time() - networkertime >= NETWORKING_TIMESTEP)
             {
-                fprintf(stderr, "\nError during regular loop.");
-                fprintf(stderr, "\nExiting..");
+                ServerNetworker &n = reinterpret_cast<ServerNetworker&>(*networker);
+                n.sendframedata(*(engine.currentstate));
+
+                networkertime = al_get_time();
             }
-            al_destroy_display(display);
-            return 0;
         }
+        renderingstate.interpolate(*(engine.oldstate), *(engine.currentstate), (al_get_time()-enginetime)/ENGINE_TIMESTEP);
+        renderer.render(display, renderingstate, myself, *networker);
     }
-    al_shutdown_font_addon();
-    al_shutdown_ttf_addon();
-    al_destroy_display(display);
-    enet_deinitialize();
     return 0;
+}
+
+int main(int argc, char **argv)
+{
+    try
+    {
+        return main_impl(argc, argv);
+    }
+    catch (...)
+    {
+        return -1;
+    }
 }

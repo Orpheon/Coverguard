@@ -1,0 +1,7 @@
+-Move things out from datastructure.h that aren't datatstructures anymore like InputContainer
+-Why does Weapon::beginstep exist?
+-Dieing is broken in multiplayer
+-src/renderer.cpp:    // TODO: ADD ANOTHER OPTIONS LIKE VSYNC
+-src/ingameelements/map.cpp:    // TODO this thing
+-if configloader is given a nonexistent json path, it just hangs without error message. This needs to be fixed.
+-controlpoint networking
